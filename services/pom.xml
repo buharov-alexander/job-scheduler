@@ -16,6 +16,7 @@
 	<description>Parent pom</description>
 	<modules>
 		<module>api-service</module>
+		<module>task-runner-service</module>
 	</modules>
 
 	<properties>

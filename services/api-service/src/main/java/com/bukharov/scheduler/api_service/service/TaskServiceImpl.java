@@ -7,8 +7,10 @@ import com.bukharov.scheduler.api_service.repository.TaskRepository;
 import com.bukharov.scheduler.api_service.repository.TaskStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional
 class TaskServiceImpl implements TaskService {
 
 	@Autowired

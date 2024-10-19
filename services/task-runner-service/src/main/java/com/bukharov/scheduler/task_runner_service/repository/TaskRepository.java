@@ -7,5 +7,5 @@ import org.springframework.data.repository.CrudRepository;
 
 public interface TaskRepository extends CrudRepository<TaskEntity, Long> {
 
-	List<TaskEntity> findByNextExecutionTimeLessThan(ZonedDateTime time);
+	List<TaskEntity> findByNextExecutionTimeLessThanAndStatus(ZonedDateTime time, TaskStatus status);
 }

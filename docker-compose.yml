@@ -1,6 +1,37 @@
 version: '3'
 services:
-  producer:
+  task_database:
+    image: postgres:latest
+    ports:
+      - 5433:5432
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=js_password
+      - POSTGRES_DB=job_scheduler_db
+    volumes:
+      - job-scheduler-data:/var/lib/postgresql/data
+  api-service:
     image: buharovalexander/job-scheduler-api-service:latest
     ports:
-      - 8080:8080
+      - 8081:8080
+    environment:
+      - JS_DATABASE_USER=postgres
+      - JS_DATABASE_PASSWORD=js_password
+      - JS_DATABASE_URL=task_database
+      - JS_DATABASE_PORT=5432
+    depends_on:
+      - task_database
+  task-runner-service:
+    image: buharovalexander/job-scheduler-task-runner-service:latest
+    ports:
+      - 8082:8080
+    environment:
+      - JS_DATABASE_USER=postgres
+      - JS_DATABASE_PASSWORD=js_password
+      - JS_DATABASE_URL=task_database
+      - JS_DATABASE_PORT=5432
+    depends_on:
+      - task_database
+      - api-service
+volumes:
+  job-scheduler-data:

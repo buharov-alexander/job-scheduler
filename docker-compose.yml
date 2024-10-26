@@ -9,6 +9,7 @@ services:
       - POSTGRES_PASSWORD=js_password
       - POSTGRES_DB=job_scheduler_db
     volumes:
+      - ./setup/init.sql:/docker-entrypoint-initdb.d/init.sql
       - job-scheduler-data:/var/lib/postgresql/data
   api-service:
     image: buharovalexander/job-scheduler-api-service:latest

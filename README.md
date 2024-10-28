@@ -16,6 +16,12 @@ Tasks are stored in memory and will be lost if reboot the schedule service.
 - **Database** stores task metadata and next execution time
 - **Task runner** retrieves tasks periodically and execute them
 
+#### Problems
+The task runner has multiple responsibility: scheduling and execution
+
+### Version 2
+<img width="719" alt="Screenshot 2024-10-27 at 23 17 27" src="https://github.com/user-attachments/assets/d866514e-6a13-413e-ae93-46a3a9b36b86">
+
 ## Resources
 - https://levelup.gitconnected.com/system-design-designing-a-distributed-job-scheduler-6d3b6d714fdb
 - https://medium.com/@vaasubisht/building-a-distributed-job-scheduler-system-00aec500cf48

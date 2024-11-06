@@ -11,6 +11,7 @@ services:
     volumes:
       - ./setup/init.sql:/docker-entrypoint-initdb.d/init.sql
       - job-scheduler-data:/var/lib/postgresql/data
+    profiles: ["stores"]
   kafka:
     image: bitnami/kafka:latest
     ports:
@@ -22,6 +23,7 @@ services:
       - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT
       - KAFKA_CFG_CONTROLLER_QUORUM_VOTERS=0@kafka:9093
       - KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER
+    profiles: ["stores"]
   api-service:
     image: buharovalexander/job-scheduler-api-service:latest
     ports:
@@ -33,6 +35,7 @@ services:
       - JS_DATABASE_PORT=5432
     depends_on:
       - task_database
+    profiles: ["services"]
   task-runner-service:
     image: buharovalexander/job-scheduler-task-runner-service:latest
     ports:
@@ -45,5 +48,6 @@ services:
     depends_on:
       - task_database
       - api-service
+    profiles: ["services"]
 volumes:
   job-scheduler-data:

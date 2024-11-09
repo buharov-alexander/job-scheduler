@@ -20,7 +20,7 @@ public class KafkaConfiguration {
 	private String kafkaAddress;
 
 	@Bean
-	public ProducerFactory<String, TaskDTO> producerFactory() {
+	public ProducerFactory<String, TaskMessage> producerFactory() {
 		Map<String, Object> config = new HashMap<>();
 		config.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, kafkaAddress);
 		config.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
@@ -30,7 +30,7 @@ public class KafkaConfiguration {
 	}
 
 	@Bean
-	public KafkaTemplate<String, TaskDTO> kafkaTemplate() {
+	public KafkaTemplate<String, TaskMessage> kafkaTemplate() {
 		return new KafkaTemplate<>(producerFactory());
 	}
 }

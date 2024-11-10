@@ -4,6 +4,8 @@ import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.bukharov.scheduler.task_runner_service.kafka.TaskKafkaProvider;
+import com.bukharov.scheduler.task_runner_service.kafka.TaskMessage;
 import com.bukharov.scheduler.task_runner_service.repository.TaskEntity;
 import com.bukharov.scheduler.task_runner_service.repository.TaskRepository;
 import com.bukharov.scheduler.task_runner_service.repository.TaskStatus;
@@ -18,6 +20,8 @@ public class TaskRunnerImpl implements TaskRunner {
 
 	@Autowired
 	private TaskRepository taskRepository;
+	@Autowired
+	private TaskKafkaProvider kafkaProvider;
 
 	@Scheduled(fixedDelay = ONE_MINUTE_IN_MILLISECONDS)
 	public void scheduleFixedRateTask() {
@@ -26,8 +30,10 @@ public class TaskRunnerImpl implements TaskRunner {
 		System.out.printf("Tasks for run: [%s]%n", tasks.stream().map(TaskEntity::name).collect(Collectors.joining()));
 
 		tasks.forEach(task -> {
-			System.out.printf("Execute task: %s%n", task.name());
-			task.status(TaskStatus.FINISHED);
+			System.out.printf("Activate task: %s%n", task.name());
+			kafkaProvider.sendMessage(new TaskMessage(task.name()));
+
+			task.status(TaskStatus.ACTIVE);
 			taskRepository.save(task);
 		});
 	}

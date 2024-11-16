@@ -16,6 +16,10 @@ public class TaskKafkaProvider {
 	private String kafkaTopicName;
 	private KafkaTemplate<String, TaskMessage> kafkaTemplate;
 
+	public TaskKafkaProvider(KafkaTemplate<String, TaskMessage> kafkaTemplate) {
+		this.kafkaTemplate = kafkaTemplate;
+	}
+
 	public void sendMessage(TaskMessage taskMessage) {
 		CompletableFuture<SendResult<String, TaskMessage>> future = kafkaTemplate.send(kafkaTopicName, taskMessage);
 

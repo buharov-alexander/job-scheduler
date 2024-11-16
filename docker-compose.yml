@@ -3,7 +3,7 @@ services:
   task_database:
     image: postgres:latest
     ports:
-      - 5433:5432
+      - "5433:5432"
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=js_password
@@ -11,23 +11,24 @@ services:
     volumes:
       - ./setup/init.sql:/docker-entrypoint-initdb.d/init.sql
       - job-scheduler-data:/var/lib/postgresql/data
-    profiles: ["stores"]
+    profiles: ["stores", "all"]
   kafka:
     image: bitnami/kafka:latest
     ports:
-      - 9092:9092
+      - "9094:9094"
     environment:
       - KAFKA_CFG_NODE_ID=0
       - KAFKA_CFG_PROCESS_ROLES=controller,broker
-      - KAFKA_CFG_LISTENERS=PLAINTEXT://:9092,CONTROLLER://:9093
-      - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT
+      - KAFKA_CFG_LISTENERS=PLAINTEXT://:9092,CONTROLLER://:9093,EXTERNAL://:9094
+      - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://kafka:9092,EXTERNAL://localhost:9094
+      - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=CONTROLLER:PLAINTEXT,EXTERNAL:PLAINTEXT,PLAINTEXT:PLAINTEXT
       - KAFKA_CFG_CONTROLLER_QUORUM_VOTERS=0@kafka:9093
       - KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER
-    profiles: ["stores"]
+    profiles: ["stores", "all"]
   api-service:
     image: buharovalexander/job-scheduler-api-service:latest
     ports:
-      - 8081:8080
+      - "8081:8080"
     environment:
       - JS_DATABASE_USER=postgres
       - JS_DATABASE_PASSWORD=js_password
@@ -35,19 +36,21 @@ services:
       - JS_DATABASE_PORT=5432
     depends_on:
       - task_database
-    profiles: ["services"]
+    profiles: ["services", "all"]
   task-runner-service:
     image: buharovalexander/job-scheduler-task-runner-service:latest
     ports:
-      - 8082:8080
+      - "8082:8080"
     environment:
       - JS_DATABASE_USER=postgres
       - JS_DATABASE_PASSWORD=js_password
       - JS_DATABASE_URL=task_database
       - JS_DATABASE_PORT=5432
+      - KAFKA_HOSTNAME=kafka
+      - KAFKA_PORT=9092
     depends_on:
       - task_database
       - api-service
-    profiles: ["services"]
+    profiles: ["services", "all"]
 volumes:
   job-scheduler-data:

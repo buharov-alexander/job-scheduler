@@ -17,6 +17,7 @@
 	<modules>
 		<module>api-service</module>
 		<module>task-runner-service</module>
+		<module>execution-service</module>
 	</modules>
 
 	<properties>

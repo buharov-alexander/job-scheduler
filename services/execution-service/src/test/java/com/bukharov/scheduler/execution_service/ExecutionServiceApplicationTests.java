@@ -1,4 +1,4 @@
-package com.bukharov.scheduler.task_runner_service;
+package com.bukharov.scheduler.execution_service;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

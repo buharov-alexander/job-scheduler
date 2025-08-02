@@ -27,6 +27,15 @@ You can use Docker Compose to fast deploy
 ```
 docker-compose --profile stores --profile services up
 ```
+### Swagger UI
+```
+http://localhost:8081/swagger-ui.html
+```
+### Kafka UI
+```
+http://localhost:8088/
+```
+
 
 ## Resources
 - https://levelup.gitconnected.com/system-design-designing-a-distributed-job-scheduler-6d3b6d714fdb

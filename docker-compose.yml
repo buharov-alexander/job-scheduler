@@ -32,6 +32,10 @@ services:
       - "8088:8080"
     environment:
       DYNAMIC_CONFIG_ENABLED: true
+      KAFKA_CLUSTERS_0_NAME: Kafka Job Scheduler Cluster
+      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:9092
+    depends_on:
+      - kafka
     profiles: [ "stores", "all" ]
   api-service:
     image: buharovalexander/job-scheduler-api-service:latest

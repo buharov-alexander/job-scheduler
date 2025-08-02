@@ -25,7 +25,7 @@ The task runner has multiple responsibility: scheduling and execution
 ## Launch using docker-compose
 You can use Docker Compose to fast deploy
 ```
-docker-compose --profile stores --profile services up
+docker-compose --profile all up
 ```
 ### Swagger UI
 ```
@@ -34,6 +34,10 @@ http://localhost:8081/swagger-ui.html
 ### Kafka UI
 ```
 http://localhost:8088/
+```
+### Grafana
+```
+http://localhost:3000/
 ```
 
 

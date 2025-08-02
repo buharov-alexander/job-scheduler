@@ -36,9 +36,11 @@ services:
       KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:9092
     depends_on:
       - kafka
-    profiles: [ "stores", "all" ]
+    profiles: [ "monitoring", "all" ]
   api-service:
     image: buharovalexander/job-scheduler-api-service:latest
+    labels:
+      - "logging=enabled"
     ports:
       - "8081:8080"
     environment:
@@ -51,6 +53,8 @@ services:
     profiles: ["services", "all"]
   task-runner-service:
     image: buharovalexander/job-scheduler-task-runner-service:latest
+    labels:
+      - "logging=enabled"
     environment:
       - JS_DATABASE_USER=postgres
       - JS_DATABASE_PASSWORD=js_password
@@ -65,6 +69,8 @@ services:
     profiles: ["services", "all"]
   execution-service:
     image: buharovalexander/job-scheduler-execution-service:latest
+    labels:
+      - "logging=enabled"
     environment:
       - JS_DATABASE_USER=postgres
       - JS_DATABASE_PASSWORD=js_password
@@ -77,5 +83,36 @@ services:
       - kafka
       - api-service
     profiles: [ "services", "all" ]
+  loki:
+    image: grafana/loki:2.9.4
+    container_name: loki
+    ports:
+      - "3100:3100"
+    command: -config.file=/etc/loki/loki-config.yml
+    volumes:
+      - ./services/monitoring/loki-config.yml:/etc/loki/loki-config.yml
+      - ./services/monitoring/loki-wal:/wal
+    profiles: [ "monitoring", "all" ]
+  promtail:
+    image: grafana/promtail:2.9.3
+    container_name: promtail
+    volumes:
+      - /var/log:/var/log
+      - /var/lib/docker/containers:/var/lib/docker/containers:ro
+      - /etc/machine-id:/etc/machine-id
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./services/monitoring/promtail-config.yml:/etc/promtail/config.yml
+    profiles: [ "monitoring", "all" ]
+  grafana:
+    image: grafana/grafana:10.2.3
+    container_name: grafana
+    ports:
+      - "3000:3000"
+    depends_on:
+      - loki
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    profiles: [ "monitoring", "all" ]
 volumes:
   job-scheduler-data:

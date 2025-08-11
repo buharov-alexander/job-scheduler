@@ -4,5 +4,6 @@ CREATE TABLE IF NOT EXISTS public.tasks
     next_execution_time timestamp(6) with time zone,
     name character varying(255),
     status character varying(255),
+    trace_id UUID,
     CONSTRAINT tasks_pkey PRIMARY KEY (id)
 )

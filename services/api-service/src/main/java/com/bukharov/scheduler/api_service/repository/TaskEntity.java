@@ -1,6 +1,7 @@
 package com.bukharov.scheduler.api_service.repository;
 
 import java.time.ZonedDateTime;
+import java.util.UUID;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -30,6 +31,9 @@ public class TaskEntity {
 	@Enumerated(EnumType.STRING)
 	private TaskStatus status;
 
-	@Column(name = "nextExecutionTime")
+	@Column(name = "next_execution_time")
 	private ZonedDateTime nextExecutionTime;
+
+	@Column(name = "trace_id")
+	private UUID traceId;
 }

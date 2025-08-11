@@ -21,7 +21,7 @@ public class TaskMessageListener {
 
 	@KafkaListener(topics = "${kafka.topic.name}", containerFactory = "kafkaListenerContainerFactory")
 	public void listener(TaskMessage task) {
-		log.info("Received message: {}", task.getName());
+		log.debug(String.format("[TASK_TRACE] Task was executed: %s", task.getTraceId()));
 
 		var taskEntityOpt = taskRepository.findById(task.getId());
 		if (taskEntityOpt.isPresent()) {

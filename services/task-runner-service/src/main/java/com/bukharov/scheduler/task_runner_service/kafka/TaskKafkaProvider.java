@@ -25,7 +25,7 @@ public class TaskKafkaProvider {
 
 		future
 				.thenAccept(result -> {
-					log.info("Sent Message = {} with offset = {}", taskMessage, result.getRecordMetadata().offset());
+					log.debug(String.format("[TASK_TRACE] Task was placed to kafka: %s", taskMessage.getTraceId()));
 				})
 				.exceptionally(ex -> {
 					log.error("Unable to send message = {} dut to: {}", taskMessage, ex.getMessage());

@@ -31,7 +31,7 @@ public class TaskRunnerImpl implements TaskRunner {
 
 		tasks.forEach(task -> {
 			System.out.printf("Activate task: %s%n", task.name());
-			kafkaProvider.sendMessage(new TaskMessage(task.id(), task.name()));
+			kafkaProvider.sendMessage(new TaskMessage(task.id(), task.name(), task.traceId()));
 
 			task.status(TaskStatus.ACTIVE);
 			taskRepository.save(task);

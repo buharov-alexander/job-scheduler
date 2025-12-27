@@ -6,4 +6,7 @@ CREATE TABLE IF NOT EXISTS public.tasks
     status character varying(255),
     trace_id UUID,
     CONSTRAINT tasks_pkey PRIMARY KEY (id)
-)
+);
+
+-- Indexes for optimization of queries
+CREATE INDEX IF NOT EXISTS idx_tasks_status_execution_time ON public.tasks(status, next_execution_time);

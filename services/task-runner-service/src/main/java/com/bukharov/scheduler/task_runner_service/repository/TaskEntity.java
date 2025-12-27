@@ -11,6 +11,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.persistence.Version;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
@@ -31,8 +32,17 @@ public class TaskEntity {
 	@Enumerated(EnumType.STRING)
 	private TaskStatus status;
 
-	@Column(name = "nextExecutionTime")
+	@Column(name = "next_execution_time")
 	private ZonedDateTime nextExecutionTime;
+	
 	@Column(name = "trace_id")
 	private UUID traceId;
+
+	/**
+	 * Version for optimistic locking.
+	 * Automatically increases on each update.
+	 */
+	@Version
+	@Column(name = "version")
+	private Long version;
 }

@@ -18,7 +18,7 @@ import lombok.experimental.Accessors;
 @Data
 @Accessors(fluent = true, chain = true)
 @Entity
-@Table(name="tasks")
+@Table(name = "tasks")
 public class TaskEntity {
 
 	@Id
@@ -34,7 +34,7 @@ public class TaskEntity {
 
 	@Column(name = "next_execution_time")
 	private ZonedDateTime nextExecutionTime;
-	
+
 	@Column(name = "trace_id")
 	private UUID traceId;
 

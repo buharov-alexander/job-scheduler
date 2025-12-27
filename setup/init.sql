@@ -5,6 +5,7 @@ CREATE TABLE IF NOT EXISTS public.tasks
     name character varying(255),
     status character varying(255),
     trace_id UUID,
+    version bigint DEFAULT 0,
     CONSTRAINT tasks_pkey PRIMARY KEY (id)
 );
 

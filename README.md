@@ -1,48 +1,61 @@
 # Job Scheduler
-Job scheduler, where you can define a job to be scheduled at a specific time.
 
-## Designing a Job Scheduler
-### Version 0
-<img width="379" alt="Screenshot 2024-09-03 at 14 26 40" src="https://github.com/user-attachments/assets/f86a9157-3af5-45de-bb55-7fea18c2d9cf">
+[Russian version](README.ru.md)
 
-- **Schedule service** handles API requests and schedules tasks (java.util.Timer)
+## Project Description
 
-#### Problems
-Tasks are stored in memory and will be lost if reboot the schedule service.
-### Version 1
-<img width="491" alt="Screenshot 2024-08-31 at 20 00 11" src="https://github.com/user-attachments/assets/bbea0d3d-b41e-4534-b454-c3e055cd1bbb">
+This project implements a distributed job scheduler for educational and demonstration purposes. The main goal is to provide an API for scheduling tasks to be executed at a specific time, ensuring reliable storage and correct processing of tasks in a microservices architecture.
 
-- **API service** handles API requests and save tasks to DB
-- **Database** stores task metadata and next execution time
-- **Task runner** retrieves tasks periodically and execute them
+## Architecture and Service Interaction
 
-#### Problems
-The task runner has multiple responsibility: scheduling and execution
+The system consists of the following main services:
 
-### Version 2
+- **API Service** — accepts requests from users to create and monitor tasks, and stores task information in the database.
+- **Task Runner** — periodically selects tasks whose execution time has come and initiates their execution by sending messages to Kafka.
+- **Execution Service** — receives tasks from Kafka and executes them, then updates the task status.
+
+### Interaction Scheme
+
+1. The user creates a task through the API service.
+2. The API service saves the task with all required metadata (execution time, task name) in the database.
+3. The Task Runner service, once a minute, finds tasks ready for execution and sends their identifiers through Kafka.
+4. The Execution Service receives tasks from Kafka, executes them, and updates their status.
+
 <img width="719" alt="Screenshot 2024-10-27 at 23 17 27" src="https://github.com/user-attachments/assets/d866514e-6a13-413e-ae93-46a3a9b36b86">
 
-## Launch using docker-compose
-You can use Docker Compose to fast deploy
+## Important Implementation Details
+
+- **Task storage in the database** — all tasks and their statuses are saved in a relational database, which ensures reliability and recovery after failures.
+- **Selection of tasks using `SELECT FOR UPDATE SKIP LOCKED`** — Task Runner uses atomic selection and locking to process tasks, so that multiple instances of the service don’t process the same task twice.
+- **Task transfer via Kafka** — to enable scalability and fault tolerance, tasks for execution are passed between services using Kafka, distributing the load and ensuring guaranteed delivery.
+
+This project illustrates typical approaches to building a reliable and scalable job scheduler using popular tools (Spring, Kafka, relational database) and considering common pitfalls of distributed systems.
+
+## Quick Start with docker-compose
+
+To quickly launch the entire system, use Docker Compose:
+
 ```
 docker-compose --profile all up
 ```
+
 ### Swagger UI
+
+The Swagger UI for testing the API is available at:
 ```
 http://localhost:8081/swagger-ui.html
 ```
+
 ### Kafka UI
+
+Web interface for monitoring Kafka:
 ```
 http://localhost:8088/
 ```
+
 ### Grafana
+
+Monitoring and dashboards:
 ```
 http://localhost:3000/
 ```
-
-
-## Resources
-- https://levelup.gitconnected.com/system-design-designing-a-distributed-job-scheduler-6d3b6d714fdb
-- https://medium.com/@vaasubisht/building-a-distributed-job-scheduler-system-00aec500cf48
-- https://www.geeksforgeeks.org/design-distributed-job-scheduler-system-design/
-- https://blog.algomaster.io/p/design-a-distributed-job-scheduler

@@ -36,7 +36,7 @@ class TaskServiceImpl implements TaskService {
 	@Transactional
 	public List<TaskDTO> getTasks(TaskStatus status) {
 		return taskRepository.findByStatus(status).stream()
-			.map(task -> new TaskDTO(task.name(), task.nextExecutionTime()))
+			.map(taskEntity -> new TaskDTO(taskEntity))
 			.collect(Collectors.toList());
 	}
 }

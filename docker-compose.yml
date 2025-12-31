@@ -41,6 +41,9 @@ services:
     profiles: [ "monitoring", "all" ]
   api-service:
     image: buharovalexander/job-scheduler-api-service:latest
+    build:
+      context: ./services/api-service
+      dockerfile: Dockerfile
     labels:
       - "logging=enabled"
     ports:
@@ -55,6 +58,9 @@ services:
     profiles: ["services", "all"]
   task-runner-service:
     image: buharovalexander/job-scheduler-task-runner-service:latest
+    build:
+      context: ./services/task-runner-service
+      dockerfile: Dockerfile
     labels:
       - "logging=enabled"
     environment:
@@ -71,6 +77,9 @@ services:
     profiles: ["services", "all"]
   execution-service:
     image: buharovalexander/job-scheduler-execution-service:latest
+    build:
+      context: ./services/execution-service
+      dockerfile: Dockerfile
     labels:
       - "logging=enabled"
     environment:

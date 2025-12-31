@@ -1,0 +1,87 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build-and-smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Java 17 and cache Maven
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+          cache: maven
+
+      - name: Ensure Maven wrapper is executable
+        run: |
+          chmod +x ./services/mvnw || true
+
+      - name: Run Maven tests for all services (JUnit)
+        run: |
+          # Run tests from the aggregator pom inside services
+          ./services/mvnw -f ./services/pom.xml -B -V test
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Docker Compose up (build & start)
+        run: |
+          # Use docker compose plugin; fallback to docker-compose if necessary
+          if command -v docker >/dev/null 2>&1; then
+            echo "Using docker compose to bring up services"
+            docker compose up -d --build
+          else
+            echo "Docker not found"
+            exit 1
+          fi
+
+      - name: Wait for services to be healthy / running
+        run: |
+          set -euo pipefail
+          # Pick docker compose command (v2 plugin) or docker-compose
+          if command -v docker-compose >/dev/null 2>&1; then
+            DC="docker-compose"
+          else
+            DC="docker compose"
+          fi
+
+          echo "Using: $DC"
+          services=$($DC config --services)
+          echo "Services in compose file: $services"
+
+          for s in $services; do
+            echo "Checking service: $s"
+            started=0
+            # Wait up to 60 seconds per service
+            for i in {1..30}; do
+              cid=$($DC ps -q $s 2>/dev/null || true)
+              if [ -n "$cid" ]; then
+                running=$(docker inspect -f '{{.State.Running}}' "$cid" 2>/dev/null || echo false)
+                if [ "$running" = "true" ]; then
+                  started=1
+                  echo "Service $s is running (container $cid)"
+                  break
+                fi
+              fi
+              sleep 2
+            done
+            if [ "$started" -ne 1 ]; then
+              echo "Service $s failed to start"
+              $DC ps || true
+              docker ps || true
+              exit 1
+            fi
+          done
+
+      - name: Show docker compose ps
+        run: |
+          docker compose ps

@@ -38,7 +38,7 @@ jobs:
           # Use docker compose plugin; fallback to docker-compose if necessary
           if command -v docker >/dev/null 2>&1; then
             echo "Using docker compose to bring up services"
-            docker compose up -d --build
+            docker compose --profile ci up -d --build
           else
             echo "Docker not found"
             exit 1

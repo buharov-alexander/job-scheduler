@@ -1,4 +1,3 @@
-version: '3'
 services:
   task_database:
     image: postgres:latest
@@ -13,7 +12,7 @@ services:
       - /var/lib/postgresql/data
     tmpfs:
       - /var/lib/postgresql/data
-    profiles: ["stores", "all"]
+    profiles: ["stores", "ci", "all"]
   kafka:
     image: bitnami/kafka:latest
     ports:
@@ -26,19 +25,7 @@ services:
       - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=CONTROLLER:PLAINTEXT,EXTERNAL:PLAINTEXT,PLAINTEXT:PLAINTEXT
       - KAFKA_CFG_CONTROLLER_QUORUM_VOTERS=0@kafka:9093
       - KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER
-    profiles: ["stores", "all"]
-  kafka-ui:
-    container_name: kafka-ui
-    image: provectuslabs/kafka-ui:latest
-    ports:
-      - "8088:8080"
-    environment:
-      DYNAMIC_CONFIG_ENABLED: true
-      KAFKA_CLUSTERS_0_NAME: Kafka Job Scheduler Cluster
-      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:9092
-    depends_on:
-      - kafka
-    profiles: [ "monitoring", "all" ]
+    profiles: ["stores", "ci", "all"]
   api-service:
     image: buharovalexander/job-scheduler-api-service:latest
     build:
@@ -55,7 +42,7 @@ services:
       - JS_DATABASE_PORT=5432
     depends_on:
       - task_database
-    profiles: ["services", "all"]
+    profiles: ["services", "ci", "all"]
   task-runner-service:
     image: buharovalexander/job-scheduler-task-runner-service:latest
     build:
@@ -74,7 +61,7 @@ services:
       - task_database
       - kafka
       - api-service
-    profiles: ["services", "all"]
+    profiles: ["services", "ci", "all"]
   execution-service:
     image: buharovalexander/job-scheduler-execution-service:latest
     build:
@@ -93,7 +80,19 @@ services:
       - task_database
       - kafka
       - api-service
-    profiles: [ "services", "all" ]
+    profiles: [ "services", "ci", "all" ]
+  kafka-ui:
+    container_name: kafka-ui
+    image: provectuslabs/kafka-ui:latest
+    ports:
+      - "8088:8080"
+    environment:
+      DYNAMIC_CONFIG_ENABLED: true
+      KAFKA_CLUSTERS_0_NAME: Kafka Job Scheduler Cluster
+      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:9092
+    depends_on:
+      - kafka
+    profiles: [ "monitoring", "all" ]
   loki:
     image: grafana/loki:2.9.4
     container_name: loki

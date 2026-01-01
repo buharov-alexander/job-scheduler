@@ -1,5 +1,7 @@
 # Job Scheduler
 
+[![CI](https://github.com/buharov-alexander/job-scheduler/actions/workflows/ci.yml/badge.svg)](https://github.com/buharov-alexander/job-scheduler/actions/workflows/ci.yml)
+
 [Russian version](README.ru.md)
 
 ## Project Description

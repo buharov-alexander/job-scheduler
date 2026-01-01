@@ -1,5 +1,7 @@
 # Планировщик задач
 
+[![CI](https://github.com/buharov-alexander/job-scheduler/actions/workflows/ci.yml/badge.svg)](https://github.com/buharov-alexander/job-scheduler/actions/workflows/ci.yml)
+
 [English version](README.md)
 
 ## Описание проекта

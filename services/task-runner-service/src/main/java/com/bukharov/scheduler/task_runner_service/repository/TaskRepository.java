@@ -29,8 +29,8 @@ public interface TaskRepository extends CrudRepository<TaskEntity, Long> {
 	@Query(value = "SELECT * FROM tasks WHERE next_execution_time < :time " +
 			"AND status = :status " +
 			"ORDER BY next_execution_time ASC " +
-			"FOR UPDATE SKIP LOCKED " +
-			"LIMIT 100", nativeQuery = true)
+			"LIMIT 100 " +
+			"FOR UPDATE SKIP LOCKED" , nativeQuery = true)
 	List<TaskEntity> findAndLockTasksForExecution(
 			@Param("time") ZonedDateTime time,
 			@Param("status") String status

@@ -113,13 +113,27 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
       - ./services/monitoring/promtail-config.yml:/etc/promtail/config.yml
     profiles: [ "monitoring", "all" ]
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./services/monitoring/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+    profiles: [ "monitoring", "all" ]
   grafana:
     image: grafana/grafana:10.2.3
     container_name: grafana
     ports:
       - "3000:3000"
+    volumes:
+      - ./services/monitoring/grafana-dashboards:/var/lib/grafana/dashboards
+      - ./services/monitoring/grafana/provisioning/datasources:/etc/grafana/provisioning/datasources:ro
+      - ./services/monitoring/grafana/provisioning/dashboards:/etc/grafana/provisioning/dashboards:ro
+
     depends_on:
       - loki
+      - prometheus
     environment:
       - GF_SECURITY_ADMIN_USER=admin
       - GF_SECURITY_ADMIN_PASSWORD=admin

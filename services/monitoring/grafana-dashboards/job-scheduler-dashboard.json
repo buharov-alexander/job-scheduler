@@ -1,0 +1,114 @@
+{
+  "annotations": {
+    "list": []
+  },
+  "editable": true,
+  "gnetId": null,
+  "graphTooltip": 0,
+  "id": null,
+  "iteration": 1629398527617,
+  "links": [],
+  "panels": [
+    {
+      "datasource": "Prometheus",
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
+      "gridPos": { "h": 4, "w": 12, "x": 0, "y": 0 },
+      "id": 1,
+      "options": {},
+      "targets": [
+        {
+          "expr": "sum(job_scheduler_created_tasks_total)",
+          "format": "time_series",
+          "instant": true,
+          "legendFormat": "created_total",
+          "refId": "A"
+        }
+      ],
+      "title": "Tasks Created (total)",
+      "type": "stat"
+    },
+    {
+      "datasource": "Prometheus",
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
+      "gridPos": { "h": 4, "w": 12, "x": 12, "y": 0 },
+      "id": 2,
+      "options": {},
+      "targets": [
+        {
+          "expr": "sum(job_scheduler_completed_tasks_total)",
+          "format": "time_series",
+          "instant": true,
+          "legendFormat": "completed_total",
+          "refId": "A"
+        }
+      ],
+      "title": "Tasks Completed (total)",
+      "type": "stat"
+    },
+	{
+      "datasource": "Prometheus",
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
+      "gridPos": { "h": 8, "w": 24, "x": 0, "y": 4 },
+      "id": 3,
+      "options": {},
+      "targets": [
+        {
+          "expr": "sum(job_scheduler_created_tasks_total)",
+          "format": "time_series",
+          "instant": false,
+          "legendFormat": "created_tasks_total",
+          "refId": "A"
+        },
+		{
+          "expr": "sum(job_scheduler_completed_tasks_total)",
+          "format": "time_series",
+          "instant": false,
+          "legendFormat": "completed_tasks_total",
+          "refId": "B"
+        }
+      ],
+      "title": "Created and Completed Tasks Over Time",
+      "type": "timeseries"
+    },
+    {
+      "datasource": "Prometheus",
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
+      "gridPos": { "h": 8, "w": 24, "x": 0, "y": 12 },
+      "id": 3,
+      "options": {},
+      "targets": [
+        {
+          "expr": "(job_scheduler_task_execution_time_seconds_sum / job_scheduler_task_execution_time_seconds_count)",
+          "format": "time_series",
+          "instant": false,
+          "legendFormat": "avg_execution_time",
+          "refId": "A"
+        }
+      ],
+      "title": "Average Task Execution Time (seconds)",
+      "type": "timeseries"
+    }
+  ],
+  "schemaVersion": 30,
+  "style": "dark",
+  "tags": ["job-scheduler"],
+  "templating": { "list": [] },
+  "time": { "from": "now-6h", "to": "now" },
+  "timepicker": {},
+  "timezone": "browser",
+  "title": "Job Scheduler - Tasks",
+  "uid": "job-scheduler-tasks",
+  "version": 1
+}

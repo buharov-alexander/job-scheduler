@@ -18,7 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class TaskRunnerImpl implements TaskRunner {
 
-	public static final int ONE_MINUTE_IN_MILLISECONDS = 60000;
+	public static final int TWENTY_SECONDS_IN_MILLISECONDS = 20000;
 
 	@Autowired
 	private TaskRepository taskRepository;
@@ -30,7 +30,7 @@ public class TaskRunnerImpl implements TaskRunner {
 	 * Uses atomic status update to prevent race condition
 	 * when multiple instances of the service are running.
 	 */
-	@Scheduled(fixedDelay = ONE_MINUTE_IN_MILLISECONDS)
+	@Scheduled(fixedDelay = TWENTY_SECONDS_IN_MILLISECONDS)
 	public void scheduleFixedRateTask() {
 		ZonedDateTime now = ZonedDateTime.now();
 		

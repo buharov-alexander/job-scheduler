@@ -63,8 +63,8 @@ public class TaskRunnerImpl implements TaskRunner {
 
 				log.info("Activating task: {} (id: {}, traceId: {})", task.name(), task.id(), task.traceId());
 				
-				// Send task to Kafka
-				kafkaProvider.sendMessage(new TaskMessage(task.id(), task.name(), task.traceId()));
+				// Send task to Kafka (include startedAt to measure execution duration)
+				kafkaProvider.sendMessage(new TaskMessage(task.id(), task.name(), task.traceId(), System.currentTimeMillis()));
 				
 				log.debug("[TASK_TRACE] Task activated and sent to Kafka: {}", task.traceId());
 				

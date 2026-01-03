@@ -11,5 +11,6 @@ public class TaskMessage {
 	private Long id;
 	private String name;
 	private UUID traceId;
+	private long startedAt;
 
 }

@@ -10,6 +10,8 @@ import com.bukharov.scheduler.api_service.repository.TaskRepository;
 import com.bukharov.scheduler.api_service.repository.TaskStatus;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import io.micrometer.core.instrument.Counter;
+import io.micrometer.core.instrument.MeterRegistry;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,6 +22,13 @@ class TaskServiceImpl implements TaskService {
 	@Autowired
 	private TaskRepository taskRepository;
 
+	private final Counter tasksCreatedCounter;
+
+	@Autowired
+	public TaskServiceImpl(MeterRegistry meterRegistry) {
+		this.tasksCreatedCounter = meterRegistry.counter("job_scheduler_created_tasks");
+	}
+
 	@Override
 	@Transactional
 	public long addNewTask(String name, ZonedDateTime executionTime) {
@@ -28,8 +37,11 @@ class TaskServiceImpl implements TaskService {
 				.status(TaskStatus.SCHEDULED)
 				.nextExecutionTime(executionTime)
 				.traceId(UUID.randomUUID());
-		log.debug(String.format("[TASK_TRACE] Task was created: %s", taskEntity.traceId()));
-		return taskRepository.save(taskEntity).id();
+	log.debug(String.format("[TASK_TRACE] Task was created: %s", taskEntity.traceId()));
+	TaskEntity saved = taskRepository.save(taskEntity);
+	// increment created counter
+	tasksCreatedCounter.increment();
+	return saved.id();
 	}
 
 	@Override

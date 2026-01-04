@@ -61,3 +61,5 @@ Monitoring and dashboards:
 ```
 http://localhost:3000/
 ```
+<img width="1725" height="856" alt="Screenshot 2026-01-03 at 19 12 02" src="https://github.com/user-attachments/assets/7174f6b4-18cb-45a6-ab19-54d93a0bff9a" />
+

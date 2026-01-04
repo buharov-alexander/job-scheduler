@@ -1,6 +1,7 @@
 package com.bukharov.scheduler.api_service.api;
 
 import com.bukharov.scheduler.api_service.repository.TaskStatus;
+import com.bukharov.scheduler.api_service.service.CreateTaskDTO;
 import com.bukharov.scheduler.api_service.service.TaskDTO;
 import com.bukharov.scheduler.api_service.service.TaskService;
 
@@ -23,7 +24,7 @@ public class TaskController {
 	private TaskService taskService;
 
 	@PostMapping
-	public long addNewTask(@RequestBody TaskDTO taskDTO) {
+	public long addNewTask(@RequestBody CreateTaskDTO taskDTO) {
 		return taskService.addNewTask(taskDTO.name(), taskDTO.executionTime());
 	}
 

@@ -7,21 +7,21 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.support.SendResult;
 import org.springframework.stereotype.Service;
-
 @Slf4j
 @Service
 public class TaskKafkaProvider {
 
 	@Value("${kafka.topic.name}")
 	private String kafkaTopicName;
-	private KafkaTemplate<String, TaskMessage> kafkaTemplate;
+	private KafkaTemplate<Long, TaskMessage> kafkaTemplate;
 
-	public TaskKafkaProvider(KafkaTemplate<String, TaskMessage> kafkaTemplate) {
+	public TaskKafkaProvider(KafkaTemplate<Long, TaskMessage> kafkaTemplate) {
 		this.kafkaTemplate = kafkaTemplate;
 	}
 
 	public void sendMessage(TaskMessage taskMessage) {
-		CompletableFuture<SendResult<String, TaskMessage>> future = kafkaTemplate.send(kafkaTopicName, taskMessage);
+		Long key = taskMessage.getId() % 2; // Simple partitioning key based on task ID
+		CompletableFuture<SendResult<Long, TaskMessage>> future = kafkaTemplate.send(kafkaTopicName, key, taskMessage);
 
 		future
 				.thenAccept(result -> {

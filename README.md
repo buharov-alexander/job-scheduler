@@ -30,15 +30,24 @@ The system consists of the following main services:
 - **Task storage in the database** — all tasks and their statuses are saved in a relational database, which ensures reliability and recovery after failures.
 - **Selection of tasks using `SELECT FOR UPDATE SKIP LOCKED`** — Task Runner uses atomic selection and locking to process tasks, so that multiple instances of the service don’t process the same task twice.
 - **Task transfer via Kafka** — to enable scalability and fault tolerance, tasks for execution are passed between services using Kafka, distributing the load and ensuring guaranteed delivery.
+- **Distribute tasks across Kafka partitions** — tasks are partitioned so multiple Execution Service instances can share the load evenly.
+- **Monitoring and metrics** — all services are integrated with Prometheus and Grafana for metrics collection and monitoring.
 
 This project illustrates typical approaches to building a reliable and scalable job scheduler using popular tools (Spring, Kafka, relational database) and considering common pitfalls of distributed systems.
 
 ## Quick Start with docker-compose
 
-To quickly launch the entire system, use Docker Compose:
+To quickly launch the entire system, use Docker Compose.
 
+Start all services:
+ - API service
+ - Task Runner service
+ - Two Execution Service instances
+ - PostgreSQL database
+ - Kafka
+ - Monitoring services (Prometheus, Grafana, Promtail, Loki, Kafka UI)
 ```
-docker-compose --profile all up
+docker compose --profile all up --scale execution-service=2
 ```
 
 ### Swagger UI

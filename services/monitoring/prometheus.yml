@@ -5,4 +5,4 @@ scrape_configs:
   - job_name: 'spring-actuator'
     metrics_path: '/actuator/prometheus'
     static_configs:
-      - targets: ['api-service:8080', 'execution-service:8080']
+      - targets: ['api-service:8080', 'job-scheduler-execution-service-1:8080', 'job-scheduler-execution-service-2:8080']

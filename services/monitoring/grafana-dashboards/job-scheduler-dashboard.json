@@ -46,6 +46,13 @@
           "instant": true,
           "legendFormat": "completed_total",
           "refId": "A"
+        },
+		{
+          "expr": "job_scheduler_completed_tasks_total",
+          "format": "time_series",
+          "instant": true,
+          "legendFormat": "{{instance}}",
+          "refId": "B"
         }
       ],
       "title": "Tasks Completed (total)",
@@ -93,7 +100,7 @@
           "expr": "(job_scheduler_task_execution_time_seconds_sum / job_scheduler_task_execution_time_seconds_count)",
           "format": "time_series",
           "instant": false,
-          "legendFormat": "avg_execution_time",
+          "legendFormat": "AVG execution time({{instance}})",
           "refId": "A"
         }
       ],

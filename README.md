@@ -49,6 +49,12 @@ Start all services:
 ```
 docker compose --profile all up --scale execution-service=2
 ```
+Docker Compose profiles:
+- services: only job scheduler services without infrastructure
+- stores: only infrastructure (DB, Kafka)
+- monitoring: only monitoring services
+- ci: for CI/CD (without Grafana, Kafka UI, etc)
+- all: all services together
 
 ### Swagger UI
 

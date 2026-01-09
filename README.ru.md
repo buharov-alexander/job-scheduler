@@ -49,6 +49,12 @@
 ```
 docker compose --profile all up --scale execution-service=2
 ```
+Docker Compose профили:
+- services: только сервисы планировщика задач без инфраструктуры
+- stores: только инфраструктура (БД, Kafka)
+- monitoring: только сервисы мониторинга
+- ci: для CI/CD (без Grafana, Kafka UI и тд)
+- all: все сервисы вместе
 
 ### Swagger UI
 
